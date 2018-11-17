@@ -1,7 +1,7 @@
-<app-header></app-header>
+<app-header (sectionChange) ="sectionChange($event)"></app-header>
 <div class="container">
   <div class="row">
-    <app-recipes></app-recipes>
-    <app-shopping-list></app-shopping-list>
+    <app-recipes *ngIf="showRecipes"></app-recipes>
+    <app-shopping-list *ngIf="!showRecipes"></app-shopping-list>
   </div>
 </div>
