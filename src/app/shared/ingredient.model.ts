@@ -3,4 +3,7 @@ export class Ingredient {
         this.amount = amount;
         this.name = name;
     }
+    toString() {
+        return this.name + " - " + this.amount;
+    }
 }
