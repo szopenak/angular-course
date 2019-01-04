@@ -8,9 +8,4 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'recipes-app';
   showRecipes: boolean = true;
-
-  sectionChange(section: string) {
-    this.showRecipes = section === 'recipes' ? true : false;
-  }
-
 }
