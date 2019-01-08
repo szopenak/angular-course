@@ -7,6 +7,8 @@ export class ShoppingListService {
     ingredients: Ingredient[] = [new Ingredient("Eggs", 4)];
     eventEmitter = new Subject<Ingredient[]>();
 
+    startedEditing: Subject<number> = new Subject();
+
     getIngredients() {
         return this.ingredients.slice();
     }
@@ -19,6 +21,21 @@ export class ShoppingListService {
     addIngredients(ings: Ingredient[]) {
         this.ingredients = this.ingredients.concat(ings);
         this.eventEmitter.next(this.getIngredients());
+    }
+
+    getIngredient(index: number) {
+        return this.ingredients[index];
+    }
+
+    editIngredient(index:number, ingredient: Ingredient) {
+        this.ingredients[index] = ingredient;
+        console.log(ingredient);
+        this.eventEmitter.next(this.getIngredients().slice());
+    }
+
+    deleteIngredient(index: number) {
+        this.ingredients = this.ingredients.splice(index, 1);
+        this.eventEmitter.next(this.getIngredients().slice());
     }
 
 }
