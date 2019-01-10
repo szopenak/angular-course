@@ -1,6 +1,9 @@
 import { Recipe } from './recipe.model';
 import { Ingredient } from '../shared/ingredient.model';
+import { Subject } from 'rxjs';
 export class RecipeService {
+
+    recipesSubject = new Subject<Recipe[]>()
     
     recipes: Recipe[] = [
         new Recipe("Pancakes", 
@@ -17,7 +20,22 @@ export class RecipeService {
           return this.recipes.slice();
       }
 
-      getRecipe(id: string) {
+      getRecipe(id: string) : Recipe {
         return +id > this.recipes.length ? null : this.recipes[+id]; 
       }
+    
+    addRecipe(recipe: Recipe) {
+        this.recipes.push(recipe);
+        this.recipesSubject.next(this.getRecipies());
+    }
+
+    updateRecipe(index: string, recipe:Recipe) {
+        this.recipes[+index] = recipe;
+        this.recipesSubject.next(this.getRecipies());
+    }
+
+    deleteRecipe(index: string) {
+        this.recipes.splice(+index, 1);
+        this.recipesSubject.next(this.getRecipies());
+    }
 }
