@@ -1,7 +1,7 @@
 import { Injectable, OnInit } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { AuthService } from "../auth/auth.service";
-import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from 'angularfire2/firestore'
+import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } from 'angularfire2/firestore'
 import { Recipe } from "../recipes/recipe.model";
 import { Observable } from "rxjs";
 
@@ -9,11 +9,15 @@ import { Observable } from "rxjs";
 export class DataStorageService{
 
     recipesCollection: AngularFirestoreCollection<Recipe>;
-    recipes: Observable<Recipe[]>;
+    recipes: Observable<DocumentChangeAction<Recipe>[]>
 
     constructor(private http: HttpClient, private authService: AuthService, private afs: AngularFirestore){
         this.recipesCollection = this.afs.collection('recipes');
-        this.recipes = this.recipesCollection.valueChanges();    
+        this.recipes = this.recipesCollection.snapshotChanges();    
+    }
+
+    getRecipes() {
+        return this.recipesCollection;
     }
 
     getRecipe(index: string) : Observable<Recipe> {
@@ -22,11 +26,25 @@ export class DataStorageService{
             .get()
             .then( recipe => {
                 let fetched = recipe.data()
-                observer.next(new Recipe(fetched.name, fetched.description, 
-                    fetched.photoUrl, fetched.ingredients, 
+                observer.next(new Recipe(fetched.name, fetched.ingredients, 
                     fetched.steps, fetched.time,fetched.uid)
                 );
             });
         });
     }
+
+    
+postRecipe(recipe: Recipe){
+      recipe.uid = this.authService.getUid();
+      this.recipesCollection.add(recipe)
+  }
+  
+  updateRecipe(id: string, recipe: Recipe){
+      recipe.uid = this.authService.getUid();
+      this.recipesCollection.doc(id).set(recipe) 
+  }
+  
+  deleteRecipe(id: string) {
+      this.recipesCollection.doc(id).delete();
+  }
 }

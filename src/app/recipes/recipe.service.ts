@@ -1,41 +1,45 @@
 import { Recipe } from './recipe.model';
 import { Ingredient } from '../shared/ingredient.model';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { DataStorageService } from '../shared/data-storage.service';
+@Injectable()
 export class RecipeService {
 
-    recipesSubject = new Subject<Recipe[]>()
-    
-    recipes: Recipe[] = [
-        new Recipe("Pancakes", 
-        "Tasty pankaces, great for a breakfast!", 
-        "https://static01.nyt.com/images/2017/03/24/dining/24COOKING-CLASSICPANCAKES/24COOKING-CLASSICPANCAKES-articleLarge.jpg",
-    [new Ingredient('Water', 2), new Ingredient('Flour', 2)]),
-        new Recipe("Pancakes 2", 
-        "Tasty pankaces, great for a breakfast!", 
-        "https://static01.nyt.com/images/2017/03/24/dining/24COOKING-CLASSICPANCAKES/24COOKING-CLASSICPANCAKES-articleLarge.jpg",
-    [new Ingredient('Meat', 2), new Ingredient('Meat', 2)])
-      ];
+    constructor(private dataStorage: DataStorageService){
+        dataStorage.getRecipes().snapshotChanges().subscribe(recipes => {
+            let rs = [];
+            recipes.forEach(r => {
+                let id =  r.payload.doc.id;
+                rs.push({[id] : r.payload.doc.data()});
+            });
+            this.recipes = rs;
+            for(let r of this.recipes){
+               console.log(r);
+            }
+            this.recipesSubject.next(rs);
+        })
+    }
+    recipes: any[];
+    recipesSubject = new Subject<any[]>()
 
-      getRecipies() {
-          return this.recipes.slice();
-      }
+    getRecipes(){
+        return this.recipes;
+    }
 
-      getRecipe(id: string) : Recipe {
-        return +id > this.recipes.length ? null : this.recipes[+id]; 
-      }
+    getRecipe(id: string): Observable<Recipe> {
+        return this.dataStorage.getRecipe(id);
+    }
     
     addRecipe(recipe: Recipe) {
-        this.recipes.push(recipe);
-        this.recipesSubject.next(this.getRecipies());
+        this.dataStorage.postRecipe(recipe);
     }
 
     updateRecipe(index: string, recipe:Recipe) {
-        this.recipes[+index] = recipe;
-        this.recipesSubject.next(this.getRecipies());
+        this.dataStorage.updateRecipe(index, recipe);
     }
 
     deleteRecipe(index: string) {
-        this.recipes.splice(+index, 1);
-        this.recipesSubject.next(this.getRecipies());
+        this.dataStorage.deleteRecipe(index);
     }
 }

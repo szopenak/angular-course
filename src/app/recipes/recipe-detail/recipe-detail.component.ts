@@ -26,7 +26,9 @@ export class RecipeDetailComponent implements OnInit {
     .subscribe(
       (params: Params) => {
         this.id = params['id'];
-        this.recipe = this.recipeService.getRecipe(this.id);
+        this.recipeService.getRecipe(this.id).subscribe(recipe => {
+          this.recipe = recipe;
+        });
       }
     );
   }
@@ -42,10 +44,10 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   canDelete() {
-    return this.authService.isAuthenticated();
+    return this.authService.isAuthenticated() && (this.authService.getUid() == this.recipe.uid);
   }
 
   canEdit() {
-    return this.authService.isAuthenticated();
+    return this.authService.isAuthenticated() && (this.authService.getUid() == this.recipe.uid);
   }
 }

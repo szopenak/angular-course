@@ -63,7 +63,6 @@ const config = {
     AngularFireModule.initializeApp(config),
     AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule
-    
   ],
   providers: [ShoppingListService, 
     RecipeService, 

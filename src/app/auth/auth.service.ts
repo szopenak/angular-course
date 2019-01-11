@@ -1,28 +1,36 @@
 import { Injectable } from "@angular/core";
-import * as firebase from "firebase"
 import { Router } from "@angular/router";
+import { AngularFireAuth } from "angularfire2/auth";
 
 @Injectable()
 export class AuthService {
 
-    constructor(private router: Router) {
+    constructor(private router: Router, private firebaseAuth: AngularFireAuth) {
     }
 
     token: string;
+    uid: string;
 
     signUpUser(email: string, password: string) {
-        firebase.auth().createUserWithEmailAndPassword(email, password)
+        this.firebaseAuth.auth.createUserWithEmailAndPassword(email, password)
+        .then(response =>{
+            this.uid = response.user.uid;
+            this.firebaseAuth.auth.currentUser.getIdToken()
+            .then( token => this.token = token)
+            this.router.navigate(['/']);
+        })
         .catch( error => {
           console.log(error);
         })
     }
 
     signInUser(email: string, password: string) {
-        firebase.auth().signInWithEmailAndPassword(email, password)
+        this.firebaseAuth.auth.signInWithEmailAndPassword(email, password)
         .then(response => {
-            this.router.navigate(['/']);
-            firebase.auth().currentUser.getIdToken()
+            this.uid = response.user.uid;
+            this.firebaseAuth.auth.currentUser.getIdToken()
             .then( token => this.token = token)
+            this.router.navigate(['/']);
         })
         .catch(error => {
             console.log(error);
@@ -31,7 +39,7 @@ export class AuthService {
     }
 
     getToken() {
-        firebase.auth().currentUser.getIdToken()
+        this.firebaseAuth.auth.currentUser.getIdToken()
             .then( token => this.token = token);
         return this.token;
     }
@@ -41,8 +49,13 @@ export class AuthService {
     }
 
     logOut(){
-        firebase.auth().signOut();
+        this.firebaseAuth.auth.signOut();
+        this.uid = null;
         this.token = null;
+    }
+
+    getUid():string{
+        return this.uid;
     }
 
 }
