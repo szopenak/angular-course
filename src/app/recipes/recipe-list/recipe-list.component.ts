@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/cor
 import { Recipe } from '../recipe.model';
 import { RecipeService } from '../recipe.service';
 import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-recipe-list',
@@ -11,7 +12,7 @@ import { Subscription } from 'rxjs';
 export class RecipeListComponent implements OnInit, OnDestroy {
 
   recipes: Recipe[];
-  constructor(private recipeService: RecipeService) {}
+  constructor(private recipeService: RecipeService, private authService: AuthService) {}
   sub: Subscription;
 
   ngOnInit() {
@@ -19,6 +20,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
       this.sub = this.recipeService.recipesSubject.subscribe((recipes)=> {
         this.recipes = recipes;
       })
+      
   }
 
   ngOnDestroy(){

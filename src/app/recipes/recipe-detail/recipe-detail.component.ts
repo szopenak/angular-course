@@ -3,6 +3,8 @@ import { Recipe } from '../recipe.model';
 import { ShoppingListService } from '../../shopping-list/shopping-list.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { RecipeService } from '../recipe.service';
+import { AuthService } from 'src/app/auth/auth.service';
+import { auth } from 'firebase';
 @Component({
   selector: 'app-recipe-detail',
   templateUrl: './recipe-detail.component.html',
@@ -13,7 +15,8 @@ export class RecipeDetailComponent implements OnInit {
   constructor(private shoppingListService : ShoppingListService,
     private route: ActivatedRoute,
     private recipeService : RecipeService,
-    private router: Router) { }
+    private router: Router,
+    private authService: AuthService) { }
 
   recipe: Recipe;
   id: string;
@@ -38,4 +41,11 @@ export class RecipeDetailComponent implements OnInit {
     this.router.navigate(["../"], {relativeTo: this.route});
   }
 
+  canDelete() {
+    return this.authService.isAuthenticated();
+  }
+
+  canEdit() {
+    return this.authService.isAuthenticated();
+  }
 }

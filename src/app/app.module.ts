@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
+import { HttpClientModule } from '@angular/common/http'
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -20,6 +21,21 @@ import { RecipeService } from './recipes/recipe.service';
 import { SignupComponent } from './auth/signup/signup.component';
 import { SigninComponent } from './auth/signin/signin.component';
 import { AuthService } from './auth/auth.service';
+import { AuthGuard } from './auth/auth-guard.service';
+import { DataStorageService } from './shared/data-storage.service';
+
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
+
+const config = {
+  apiKey: "AIzaSyCeDRQ-Mzp5r2ObraDoJf-BqeHydkRH0W4",
+  authDomain: "przepisowo.firebaseapp.com",
+  databaseURL: "https://przepisowo.firebaseio.com",
+  projectId: "przepisowo",
+  storageBucket: "przepisowo.appspot.com",
+  messagingSenderId: "319202021211"
+};
 
 @NgModule({
   declarations: [
@@ -42,9 +58,18 @@ import { AuthService } from './auth/auth.service';
     BrowserModule,
     FormsModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule,
+    AngularFireModule.initializeApp(config),
+    AngularFirestoreModule.enablePersistence(),
+    AngularFireAuthModule
+    
   ],
-  providers: [ShoppingListService, RecipeService, AuthService],
+  providers: [ShoppingListService, 
+    RecipeService, 
+    AuthService, 
+    AuthGuard, 
+    DataStorageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
