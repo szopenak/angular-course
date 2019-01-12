@@ -18,13 +18,33 @@ export class RecipeService {
                console.log(r);
             }
             this.recipesSubject.next(rs);
-        })
+        });
     }
     recipes: any[];
-    recipesSubject = new Subject<any[]>()
+    recipesSubject = new Subject<any[]>();
+
+    myRecipes: any[];
+    myRecipesSubject = new Subject<any[]>();
 
     getRecipes(){
         return this.recipes;
+    }
+
+    getMyRecipes(){
+        this.dataStorage.getMyRecipes().subscribe(recipes => {
+            let rs = [];
+            recipes.forEach(r => {
+                let id =  r.payload.doc.id;
+                rs.push({[id] : r.payload.doc.data()});
+            });
+            this.myRecipes = rs;
+            for(let r of this.myRecipes){
+               console.log('My recipe:')
+               console.log(r);
+            }
+            this.myRecipesSubject.next(rs);
+        });
+        return this.myRecipesSubject;
     }
 
     getRecipe(id: string): Observable<Recipe> {

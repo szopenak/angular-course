@@ -20,6 +20,11 @@ export class DataStorageService{
         return this.recipesCollection;
     }
 
+    getMyRecipes(){
+        let uid = this.authService.getUid();
+        return this.afs.collection('recipes', ref => ref.where('uid', '==', uid)).snapshotChanges();
+    }
+
     getRecipe(index: string) : Observable<Recipe> {
         return new Observable((observer) => {
             this.recipesCollection.ref.doc(index)

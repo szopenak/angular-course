@@ -4,6 +4,7 @@ import { RecipeService } from '../recipe.service';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { DataStorageService } from 'src/app/shared/data-storage.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-recipe-list',
@@ -13,15 +14,34 @@ import { DataStorageService } from 'src/app/shared/data-storage.service';
 export class RecipeListComponent implements OnInit, OnDestroy {
 
   recipes: any[];
-  constructor(private recipeService: RecipeService, private authService: AuthService, private dataSource: DataStorageService) {}
+  constructor(private recipeService: RecipeService, private authService: AuthService, private route: ActivatedRoute) {}
   sub: Subscription;
+  mySub: Subscription;
+  isMine: boolean = false;
 
   ngOnInit() {
-      this.sub = this.recipeService.recipesSubject.subscribe((recipes)=> {
-        this.recipes = recipes;
-        console.log(recipes);
+
+      this.route.queryParams.subscribe((queryParams:any) => {
+        this.isMine = queryParams.mine ? true : false;
+        if (this.isMine && this.authService.isAuthenticated()) {
+          this.recipes = this.recipeService.myRecipes;
+          this.sub.unsubscribe();
+          this.mySub = this.recipeService.getMyRecipes().subscribe((recipes)=> {
+            this.recipes = recipes;
+            console.log(recipes);
+          })
+        } else {
+          this.sub = this.recipeService.recipesSubject.subscribe((recipes)=> {
+            this.recipes = recipes;
+            console.log(recipes);
+          })
+          if(this.mySub){
+            this.mySub.unsubscribe();
+          }
+          this.recipes = this.recipeService.getRecipes();
+        }
+        console.log(this.isMine);
       })
-      this.recipes = this.recipeService.getRecipes();
   }
 
   getKey(row: any){
@@ -33,5 +53,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(){
     this.sub.unsubscribe();
+    console.log("destroy")
   }
 }
