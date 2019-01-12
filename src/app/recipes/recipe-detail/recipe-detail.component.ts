@@ -5,6 +5,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { RecipeService } from '../recipe.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { auth } from 'firebase';
+import { Ingredient } from 'src/app/shared/ingredient.model';
 @Component({
   selector: 'app-recipe-detail',
   templateUrl: './recipe-detail.component.html',

@@ -1,5 +1,6 @@
 export class Ingredient {
-    constructor(public name: string) {
+    name: string;
+    constructor(name: string) {
         this.name = name;
     }
     toString() {
