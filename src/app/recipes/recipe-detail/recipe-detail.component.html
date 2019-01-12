@@ -1,3 +1,4 @@
+<div *ngIf="recipe">
 <div class="row">
     <div class="col-xs-12">
       <h1>{{recipe.name}}</h1>
@@ -12,7 +13,7 @@
         </button>
         <ul class="dropdown-menu">
           <li><a (click)="addToShoppingList()" style="cursor: pointer">To shopping list</a></li>
-          <li><a style="cursor: pointer" routerLink="edit" *ngIf="canEdit()">Edit recipe</a></li>
+          <li><a style="cursor: pointer" routerLink="edit" queryParamsHandling="merge" *ngIf="canEdit()">Edit recipe</a></li>
           <li><a style="cursor: pointer" (click) = "onRecipeDelete()" *ngIf="canDelete()">Delete recipe</a></li>
         </ul>
       </div>
@@ -33,4 +34,5 @@
       <li *ngFor="let step of recipe.steps" class="list-group-item">{{step}}</li>
     </ul>
   </div>
+</div>
 </div>

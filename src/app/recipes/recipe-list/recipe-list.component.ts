@@ -25,7 +25,9 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         this.isMine = queryParams.mine ? true : false;
         if (this.isMine && this.authService.isAuthenticated()) {
           this.recipes = this.recipeService.myRecipes;
-          this.sub.unsubscribe();
+          if(this.sub){
+            this.sub.unsubscribe();
+          }
           this.mySub = this.recipeService.getMyRecipes().subscribe((recipes)=> {
             this.recipes = recipes;
             console.log(recipes);
@@ -52,7 +54,12 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(){
-    this.sub.unsubscribe();
+    if(this.sub){
+      this.sub.unsubscribe();
+    }
+    if(this.mySub){
+      this.mySub.unsubscribe();
+    }
     console.log("destroy")
   }
 }
