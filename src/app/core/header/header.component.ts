@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Output} from '@angular/core'
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../../auth/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -12,5 +12,9 @@ export class HeaderComponent {
     onLogOut(){
         this.authService.logOut();
         this.router.navigate(['/']);
+    }
+
+    isAuthenticated() {
+        return this.authService.isAuthenticated();
     }
 }
