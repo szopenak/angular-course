@@ -14,6 +14,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { StoreModule } from '@ngrx/store';
+import { shoppingListReducer } from './shopping-list/store/shopping-list.reducers';
 
 const config = {
   apiKey: "AIzaSyCeDRQ-Mzp5r2ObraDoJf-BqeHydkRH0W4",
@@ -31,14 +33,15 @@ const config = {
   imports: [
     BrowserModule,
     SharedModule,
-    ShoppingListModule,  
-    AuthModule, 
+    ShoppingListModule,
+    AuthModule,
     CoreModule,
     AppRoutingModule,
     HttpClientModule,
     AngularFireModule.initializeApp(config),
     AngularFirestoreModule.enablePersistence(),
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    StoreModule.forRoot({shoppingList: shoppingListReducer})
   ],
   providers: [],
   bootstrap: [AppComponent]

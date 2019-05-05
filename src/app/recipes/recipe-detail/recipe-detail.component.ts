@@ -1,11 +1,14 @@
+import { Ingredient } from './../../shared/ingredient.model';
+import { Store } from '@ngrx/store';
 import { Component, OnInit } from '@angular/core';
 import { Recipe } from '../recipe.model';
-import { ShoppingListService } from '../../shopping-list/shopping-list.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { RecipeService } from '../recipe.service';
 import { AuthService } from 'src/app/auth/auth.service';
-import { auth } from 'firebase';
-import { Ingredient } from 'src/app/shared/ingredient.model';
+import * as ShoppingListActions from  './../../shopping-list/store/shopping-list.actions';
+import * as fromShoppingList from '../../shopping-list/store/shopping-list.reducers';
+
+
 @Component({
   selector: 'app-recipe-detail',
   templateUrl: './recipe-detail.component.html',
@@ -13,11 +16,12 @@ import { Ingredient } from 'src/app/shared/ingredient.model';
 })
 export class RecipeDetailComponent implements OnInit {
 
-  constructor(private shoppingListService : ShoppingListService,
+  constructor(
     private route: ActivatedRoute,
     private recipeService : RecipeService,
     private router: Router,
-    private authService: AuthService) { }
+    private authService: AuthService,
+    private store: Store<fromShoppingList.AppState>) { }
 
   recipe: Recipe;
   id: string;
@@ -36,7 +40,7 @@ export class RecipeDetailComponent implements OnInit {
   
   addToShoppingList() {
     console.log("Adding to shopping list: "+this.recipe.ingredients);
-    this.shoppingListService.addIngredients(this.recipe.ingredients);
+    this.store.dispatch(new ShoppingListActions.AddIngredients((this.recipe.ingredients)));
   }
 
   onRecipeDelete(){
