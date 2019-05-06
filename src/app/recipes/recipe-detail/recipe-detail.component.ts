@@ -39,7 +39,8 @@ export class RecipeDetailComponent implements OnInit {
   }
   
   addToShoppingList() {
-    console.log("Adding to shopping list: "+this.recipe.ingredients);
+    console.log("Adding to shopping list: " + this.recipe.ingredients);
+    
     this.store.dispatch(new ShoppingListActions.AddIngredients((this.recipe.ingredients)));
   }
 

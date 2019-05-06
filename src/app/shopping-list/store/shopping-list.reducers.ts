@@ -28,9 +28,10 @@ export function shoppingListReducer(state = initialState, action: ShoppingListAc
             };
 
         case ShoppingListActions.ADD_INGREDIENTS:
+        let newIngs = action.payload.map( i => {return new Ingredient(''+i)})
             return {
                 ... state,
-                ingredients: [... state.ingredients, ... action.payload]
+                ingredients: [... state.ingredients, ... newIngs]
             };
 
         case ShoppingListActions.DELETE_INGREDIENT:
@@ -59,6 +60,13 @@ export function shoppingListReducer(state = initialState, action: ShoppingListAc
                 ... state,
                 editedIngredient: editedIngredient,
                 editedIngredientIndex: action.payload
+            };
+        
+        case ShoppingListActions.STOP_EDIT:
+            return {
+                ... state,
+                editedIngredient: null,
+                editedIngredientIndex: -1
             };
 
         default:
