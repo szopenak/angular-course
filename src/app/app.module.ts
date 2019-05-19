@@ -2,10 +2,8 @@ import { CoreModule } from './core/core.module';
 import { AuthModule } from './auth/auth.module';
 import { ShoppingListModule } from './shopping-list/shopping-list.module';
 import { SharedModule } from './shared/shared.module';
-import { RecipesModule } from './recipes/recipes.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { HttpClientModule } from '@angular/common/http'
 
 import { AppComponent } from './app.component';
@@ -16,6 +14,7 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { StoreModule } from '@ngrx/store';
 import { shoppingListReducer } from './shopping-list/store/shopping-list.reducers';
+import { authReducer } from './auth/store/auth.reducers';
 
 const config = {
   apiKey: "AIzaSyCeDRQ-Mzp5r2ObraDoJf-BqeHydkRH0W4",
@@ -41,7 +40,10 @@ const config = {
     AngularFireModule.initializeApp(config),
     AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule,
-    StoreModule.forRoot({shoppingList: shoppingListReducer})
+    StoreModule.forRoot({
+      shoppingList : shoppingListReducer,
+      auth: authReducer
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]
