@@ -1,10 +1,9 @@
 import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { Recipe } from '../recipe.model';
 import { RecipeService } from '../recipe.service';
 import { Subscription } from 'rxjs';
-import { AuthService } from 'src/app/auth/auth.service';
-import { DataStorageService } from 'src/app/shared/data-storage.service';
 import { ActivatedRoute } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/store/app.reducers';
 
 @Component({
   selector: 'app-recipe-list',
@@ -14,16 +13,21 @@ import { ActivatedRoute } from '@angular/router';
 export class RecipeListComponent implements OnInit, OnDestroy {
 
   recipes: any[];
-  constructor(private recipeService: RecipeService, private authService: AuthService, private route: ActivatedRoute) {}
+  constructor(
+    private recipeService: RecipeService, 
+    private route: ActivatedRoute,
+    private store: Store<AppState>
+    ) {}
   sub: Subscription;
   mySub: Subscription;
   isMine: boolean = false;
+  authenticated: boolean;
 
   ngOnInit() {
-
+      this.store.select('auth').subscribe(auth => this.authenticated = auth.authenticated);
       this.route.queryParams.subscribe((queryParams:any) => {
         this.isMine = queryParams.mine ? true : false;
-        if (this.isMine && this.authService.isAuthenticated()) {
+        if (this.isMine && this.authenticated) {
           this.recipes = this.recipeService.myRecipes;
           if(this.sub){
             this.sub.unsubscribe();

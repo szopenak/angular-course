@@ -17,7 +17,7 @@ export class AuthService {
     signUpUser(email: string, password: string) {
         this.firebaseAuth.auth.createUserWithEmailAndPassword(email, password)
         .then(response =>{
-            this.store.dispatch(new Signin());
+            this.store.dispatch(new Signin(response.user.uid));
             this.firebaseAuth.auth.currentUser.getIdToken()
                 .then( token => 
                     this.store.dispatch(new SetToken(token))
@@ -32,8 +32,7 @@ export class AuthService {
     signInUser(email: string, password: string) {
         this.firebaseAuth.auth.signInWithEmailAndPassword(email, password)
         .then(response => {
-            this.store.dispatch(new Signin());
-            this.uid = response.user.uid;
+            this.store.dispatch(new Signin(response.user.uid));
             this.firebaseAuth.auth.currentUser.getIdToken()
             .then( token => 
                 this.store.dispatch(new SetToken(token))
@@ -44,12 +43,6 @@ export class AuthService {
             console.log(error);
         })
         
-    }
-
-    getToken() {
-        this.firebaseAuth.auth.currentUser.getIdToken()
-            .then( token => this.token = token);
-        return this.token;
     }
 
     logOut(){

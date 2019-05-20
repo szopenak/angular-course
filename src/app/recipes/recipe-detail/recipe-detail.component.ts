@@ -25,6 +25,8 @@ export class RecipeDetailComponent implements OnInit {
 
   recipe: Recipe;
   id: string;
+  authenticated: boolean = false;
+  uid: string;
 
   ngOnInit() {
     this.route.params
@@ -36,6 +38,10 @@ export class RecipeDetailComponent implements OnInit {
         });
       }
     );
+    this.store.select('auth').subscribe(auth => {
+      this.authenticated = auth.authenticated;
+      this.uid = auth.uid;
+    })
   }
   
   addToShoppingList() {
@@ -50,10 +56,10 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   canDelete() {
-    return this.authService.isAuthenticated() && (this.authService.getUid() == this.recipe.uid);
+    return this. authenticated && (this.uid == this.recipe.uid);
   }
 
   canEdit() {
-    return this.authService.isAuthenticated() && (this.authService.getUid() == this.recipe.uid);
+    return this.authenticated && (this.uid == this.recipe.uid);
   }
 }
