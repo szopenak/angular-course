@@ -16,6 +16,7 @@ export function authReducer(state = initialState, action: AuthActions.AuthAction
     switch (action.type) {
         case AuthActions.SIGNUP:
         case AuthActions.SIGNIN:
+            console.log("SIGIN/SIGNUP" + action.payload);
             return {
                 ...state,
                 authenticated: true,
@@ -28,6 +29,7 @@ export function authReducer(state = initialState, action: AuthActions.AuthAction
                 token: null
             }
         case AuthActions.SET_TOKEN:
+            console.log("SET TOKEN " + action.payload)
             return {
                 ...state,
                 token: action.payload

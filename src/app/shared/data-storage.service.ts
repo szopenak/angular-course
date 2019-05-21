@@ -1,6 +1,5 @@
 import { Injectable, OnInit } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { AuthService } from "../auth/auth.service";
 import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } from 'angularfire2/firestore'
 import { Recipe } from "../recipes/recipe.model";
 import { Observable } from "rxjs";

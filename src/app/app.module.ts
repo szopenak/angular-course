@@ -5,6 +5,7 @@ import { SharedModule } from './shared/shared.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http'
+import { EffectsModule } from '@ngrx/effects'
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -15,6 +16,7 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { StoreModule } from '@ngrx/store';
 import { shoppingListReducer } from './shopping-list/store/shopping-list.reducers';
 import { authReducer } from './auth/store/auth.reducers';
+import { AuthEffects } from './auth/store/auth.effects';
 
 const config = {
   apiKey: "AIzaSyCeDRQ-Mzp5r2ObraDoJf-BqeHydkRH0W4",
@@ -43,7 +45,8 @@ const config = {
     StoreModule.forRoot({
       shoppingList : shoppingListReducer,
       auth: authReducer
-    })
+    }),
+    EffectsModule.forRoot([AuthEffects])
   ],
   providers: [],
   bootstrap: [AppComponent]
